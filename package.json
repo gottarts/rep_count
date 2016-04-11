@@ -1,0 +1,20 @@
+{
+  "name": "rss-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bower": "^1.7.9",
+    "ent": "^2.2.0",
+    "express": "^4.13.4",
+    "gulp": "^3.9.1",
+    "slush": "^1.1.1",
+    "slush-wean": "^0.1.9",
+    "socket.io": "^1.4.5"
+  }
+}
