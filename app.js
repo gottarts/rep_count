@@ -40,7 +40,7 @@ server.listen(8080);
 
 function search(nameKey, myArray){
     for (var i=0; i < myArray.length; i++) {
-        if (myArray[i].name === nameKey) {
+        if (myArray[i].username === nameKey) {
             return myArray[i];
         }
     }
