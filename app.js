@@ -21,13 +21,9 @@ io.sockets.on('connection', function(socket, username) {
 
     // When a message is received, the client’s username is retrieved and sent to the other people
     socket.on('message', function(data) {
-        //message = ent.encode(message);
-        for (var i = 0, len = store.length; i < len; i++) {
-            lookup[array[i].id] = array[i];
-        }
 
-        var item = $.grep(store, function(e) { return e.username == data.username; });
-        if (item.length > 0) {
+        var item = search(data.username, store);
+        if (item != null) {
             item.count = parseInt(item.count) + 1;
         } else {
             var item = {};
@@ -35,9 +31,17 @@ io.sockets.on('connection', function(socket, username) {
             item.count = 1;
         }
         store.push(item);
+        console.log(store);
         socket.broadcast.emit('message', { username: item.username, message: item.count });
     });
 });
 
 server.listen(8080);
 
+function search(nameKey, myArray){
+    for (var i=0; i < myArray.length; i++) {
+        if (myArray[i].name === nameKey) {
+            return myArray[i];
+        }
+    }
+}
