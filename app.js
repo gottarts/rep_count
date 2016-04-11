@@ -29,10 +29,10 @@ io.sockets.on('connection', function(socket, username) {
             var item = {};
             item.username = data.username;
             item.count = 1;
+            store.push(item);
         }
-        store.push(item);
         console.log(store);
-        socket.broadcast.emit('message', { username: item.username, message: item.count });
+        socket.broadcast.emit('message', store);
     });
 });
 

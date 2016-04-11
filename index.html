@@ -1,77 +1,77 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Real-time Super Chat!</title>
-        <style>
-            #zone_chat strong {
-                color: white;
-                background-color: black;
-                padding: 2px;
-            }
-        </style>
-    </head>
- 
-    <body>
-        <h1>Log</h1>
 
-        <form action="/" method="post" id="score_form">
-            <!--<input type="text" name="message" id="message" placeholder="Your message..." size="50" autofocus />-->
-            <input type="submit" id="send_message" value="Send" />
-        </form>
+<head>
+    <meta charset="utf-8" />
+    <title>Rep Count</title>
+    <style>
+        #zone_chat strong {
+            color: white;
+            background-color: black;
+            padding: 2px;
+        }
+    </style>
+</head>
 
-        <section id="chat_zone">
-            
-        </section>
+<body>
+    <h1>Rep Count</h1>
+
+    <form action="/" method="post" id="score_form">
+        <!--<input type="text" name="message" id="message" placeholder="Your message..." size="50" autofocus />-->
+        <input type="submit" id="send_message" value="Send" />
+    </form>
+
+    <section id="score_zone">
+
+    </section>
 
 
-        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-        <script src="/socket.io/socket.io.js"></script>
-        <script>
-
-            // Connecting to socket.io
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Connecting to socket.io
             var socket = io.connect('http://localhost:8080');
 
             // The username is requested, sent to the server and displayed in the title
-            var username = prompt('What\'s your username?');
+            var username = prompt('Username?');
             socket.emit('new_client', username);
             document.title = username + ' - ' + document.title;
+            $('#score_zone').prepend('<div><b>' + username +'</b>: <span id="' + username +'">0</span></div>');
             //$('#chat_zone').prepend('<div><b>' + username +'</b>: <span id="' + username +'">0</span></div>');
              
 
             // When a message is received it's inserted in the page
             socket.on('message', function(data) {
-                insertMessage(data.username, data.message)
+                insertMessage(data);
             })
 
             // When a new client connects, the information is displayed
             socket.on('new_client', function(username) {
                 if(!$('#' + username).length)
-                $('#chat_zone').prepend('<div><b>' + username +'</b>: <span id="' + username +'">0</span></div>');
+                $('#score_zone').prepend('<div><b>' + username +'</b>: <span id="' + username +'">0</span></div>');
             })
 
             // When the form is sent, the message is sent and displayed on the page
             $('#score_form').submit(function () {
                 var message = {username: username, message: 1};
                 socket.emit('message', message); // Sends the message to the others
-                insertMessage(message.username, message.message); // Also displays the message on our page
-                $('#message').val('').focus(); // Empties the chat form and puts the focus back on it
+                $('#' + username).text(parseInt($('#' + username).text()) + 1);
+                //insertMessage(data); // Also displays the message on our page
+                //$('#message').val('').focus(); // Empties the chat form and puts the focus back on it
                 return false; // Blocks 'classic' sending of the form
             });
             
             // Adds a message to the page
-            function insertMessage(username, message) {
-                var prev = parseInt($('#' + username).text())
-                if(isNaN(prev)){
-                  $('#chat_zone').prepend('<div><b>' + username +'</b>: <span id="' + username +'">0</span></div>');
-                  prev = 0; 
-                } 
-                
-                $('#' + username).empty();
-                $('#' + username).text(prev + 1);
-                // $('#chat_zone').prepend(username + ': ' + '<span id="' + username + '">' + (prev + 1) + '</span>');
-                // $('#chat_zone').prepend('<div id="' + username + '">' + username + ': ' + (prev + 1) + '</div>');
-            }
-        </script>
-    </body>
+            function insertMessage(data) {
+                $('#score_zone').empty();
+                for (var i=0; i < data.length; i++) {
+                        $('#score_zone').append('<div><b>' 
+                        + data[i].username +'</b>: <span id="' 
+                        + data[i].username +'">' 
+                        + data[i].count +'</span></div>');
+                    }
+             }
+    </script>
+</body>
+
 </html>
